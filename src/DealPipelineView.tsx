@@ -77,8 +77,13 @@ function formatYAxisTick(v: number) {
   return `${dd.toString().padStart(2, '0')} ${MONTHS[mm]}`;
 }
 
-// Custom badge shape for each deal
-const DealBadge = (props: any) => {
+interface DealBadgeProps {
+  cx?: number;
+  cy?: number;
+  payload: { name: string };
+}
+
+const DealBadge = (props: DealBadgeProps) => {
   const { cx, cy, payload } = props;
   if (cx == null || cy == null) return <g />;
   return (
@@ -96,11 +101,10 @@ export default function DealPipelineView() {
   const [stage, setStage] = useState('All');
   const [zoomed, setZoomed] = useState(false);
   const chartRef = useRef<HTMLDivElement>(null);
-  const [chartHeight, setChartHeight] = useState(400);
 
   useLayoutEffect(() => {
     if (chartRef.current) {
-      setChartHeight(chartRef.current.offsetHeight);
+      // chartHeight is no longer used
     }
   }, []);
 
@@ -125,7 +129,7 @@ export default function DealPipelineView() {
         <ToggleButton checked={zoomed} onClick={() => setZoomed(z => !z)}>
           {zoomed ? 'Zoomed View' : 'Default View'}
         </ToggleButton>
-        <Dropdown value={stage} onChange={(event: any, data: any) => setStage(data.optionValue as string)}>
+        <Dropdown value={stage} onChange={((_event, data) => setStage(data.optionValue as string)) as any}>
           {stages.map(s => (
             <Option key={s} value={s}>{s}</Option>
           ))}
@@ -155,7 +159,7 @@ export default function DealPipelineView() {
               </YAxis>
               <Tooltip
                 cursor={{ strokeDasharray: '3 3' }}
-                formatter={(_v: any, _n: any, props: any) => {
+                formatter={(_v: number, _n: string, props: { payload: { name: string; size: number; stage: string; nextActivityDate?: string } }) => {
                   const d = props.payload;
                   return [
                     `Name: ${d.name}`,
