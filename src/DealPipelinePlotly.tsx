@@ -440,7 +440,7 @@ export default function DealPipelinePlotly() {
                   Deal Pipeline
                 </h2>
                 {chartView === 'deals' && (
-                  <Button appearance="secondary" onClick={handleBackToSummary} style={{ marginLeft: 16 }}>
+                  <Button appearance="outline" size="small" style={{ marginLeft: 16, border: '1px solid #2563eb' }} onClick={handleBackToSummary}>
                     Back to aggregated view
                   </Button>
                 )}
@@ -449,9 +449,10 @@ export default function DealPipelinePlotly() {
             {/* Dashboard description or info text directly under header */}
             {chartView === 'summary' && (
               <>
-                <div style={{ marginTop: 0, marginBottom: 8, maxWidth: 700 }}>
-                  <div style={{ fontSize: 14, color: '#64748b', lineHeight: 1.5, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    This dashboard provides a visual summary of your deal pipeline, grouped by stage and probability. Click any cell to drill down and explore the underlying deals in detail.
+                <div style={{ marginTop: 0, marginBottom: 8, maxWidth: 1000 }}>
+                  <div style={{ fontSize: 14, color: '#64748b', lineHeight: 1.5 }}>
+                    This dashboard provides a visual summary of your deal pipeline, grouped by stage and probability.<br />
+                    Click any cell to drill down and explore the underlying deals in detail.
                   </div>
                 </div>
                 <div style={{ borderBottom: '1px solid #e5e7eb', marginBottom: 16 }} />
@@ -637,7 +638,7 @@ export default function DealPipelinePlotly() {
             {chartView === 'summary' && (
               <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                 {/* Filters Row: All filters in a single row, minWidth: 180px */}
-                <div style={{ display: 'flex', gap: 16, marginBottom: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+                <div style={{ display: 'flex', gap: 16, marginBottom: 8, alignItems: 'center' }}>
                   <Combobox
                     placeholder="Select Stages"
                     multiselect
@@ -699,6 +700,21 @@ export default function DealPipelinePlotly() {
                       <Option key={owner} value={owner} text={owner}>{owner}</Option>
                     ))}
                   </Combobox>
+                  <Button
+                    size="small"
+                    appearance="secondary"
+                    style={{ marginLeft: 4 }}
+                    onClick={() => {
+                      setSelectedStages([...summaryStages]);
+                      setSelectedProbs([...summaryProbabilities]);
+                      setSelectedOwners([...allOwners]);
+                      setSearch('');
+                      setLockedStage(null);
+                      setLockedProb(null);
+                    }}
+                  >
+                    Reset to Default
+                  </Button>
                 </div>
                 {/* Tags Row: All tags in a single row, wrap if needed */}
                 <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap', alignItems: 'center' }}>
@@ -760,44 +776,41 @@ export default function DealPipelinePlotly() {
                     margin: '0 0 40px 0',
                     alignSelf: 'stretch',
                   }} />
-                  
                   {/* Column 2: Chart */}
                   <div style={{
+                    background: '#f8fafc',
+                    borderRadius: 12,
+                    border: '1px solid #e5e7eb',
+                    padding: 24,
                     display: 'grid',
-                    gridTemplateColumns: `80px repeat(${summaryStages.length}, 1fr)`,
+                    gridTemplateColumns: `100px repeat(${summaryStages.length}, 1fr)`,
                     gridTemplateRows: `repeat(${summaryProbabilities.length}, 1fr) 40px`,
-                    gap: 0,
-                    background: '#fff',
-                    borderRadius: '16px',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-                    overflow: 'hidden',
-                    minHeight: 600,
-                    height: '100%',
-                    border: '1px solid #eee',
+                    gap: 16,
+                    alignItems: 'stretch',
+                    justifyItems: 'stretch',
+                    minWidth: 400,
+                    minHeight: 300,
+                    flex: 1,
+                    width: '100%',
                     position: 'relative',
-                    maxWidth: 1100,
-                    minWidth: 700,
                   }}>
                     {/* Y-axis labels */}
                     {summaryProbabilities.map((prob, rowIdx) => (
                       <div key={prob} style={{
                         gridColumn: 1,
                         gridRow: rowIdx + 1,
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        height: '100%',
-                        background: '#f7f7f7', 
-                        fontWeight: 500, 
-                        fontSize: 14, 
-                        borderRight: '1px solid #eee',
-                        borderBottom: '1px solid #eee',
-                        position: 'relative',
-                        zIndex: 2,
+                        display: 'flex',
+                        alignItems: 'center',
                         justifyContent: 'flex-end',
                         paddingRight: 12,
-                        color: '#64748b'
+                        fontWeight: 500,
+                        fontSize: 14,
+                        color: '#64748b',
+                        background: '#f7f7f7',
+                        borderRadius: 8,
+                        borderBottom: '1px solid #eee',
                       }}>
-                        <span>{prob}</span>
+                        {prob}
                       </div>
                     ))}
                     {/* Matrix cells */}
@@ -821,103 +834,75 @@ export default function DealPipelinePlotly() {
                             style={{
                               gridColumn: colIdx + 2,
                               gridRow: rowIdx + 1,
+                              background: '#fff',
+                              borderRadius: 10,
+                              boxShadow: '0 2px 8px rgba(37,99,235,0.08)',
+                              border: '1px solid #f0f0f0',
+                              padding: '12px 16px',
+                              minHeight: 60,
                               display: 'flex',
                               flexDirection: 'column',
-                              alignItems: 'stretch',
+                              alignItems: 'flex-start',
                               justifyContent: 'center',
-                              minHeight: 80,
-                              background: '#fff',
-                              borderRight: colIdx === summaryStages.length - 1 ? 'none' : '1px solid #eee',
-                              borderBottom: '1px solid #eee',
-                              borderLeft: 'none',
-                              borderTop: 'none',
-                              boxSizing: 'border-box',
-                              position: 'relative',
-                              zIndex: 1,
-                              padding: '12px 20px',
+                              gap: 4,
+                              cursor: 'pointer',
+                              transition: 'box-shadow 0.2s',
+                            }}
+                            onClick={() => {
+                              setSelectedStages([stage]);
+                              setSelectedProbs([prob]);
+                              setLockedStage(stage);
+                              setLockedProb(prob);
+                              setChartView('deals');
+                            }}
+                            onMouseEnter={e => {
+                              e.currentTarget.style.boxShadow = '0 4px 12px rgba(37,99,235,0.08)';
+                              const amountDiv = e.currentTarget.querySelector('.summary-amount');
+                              if (amountDiv) {
+                                (amountDiv as HTMLElement).style.color = '#2563eb';
+                                (amountDiv as HTMLElement).style.textDecoration = 'underline';
+                              }
+                            }}
+                            onMouseLeave={e => {
+                              e.currentTarget.style.boxShadow = '0 2px 8px rgba(37,99,235,0.08)';
+                              const amountDiv = e.currentTarget.querySelector('.summary-amount');
+                              if (amountDiv) {
+                                (amountDiv as HTMLElement).style.color = '#23272f';
+                                (amountDiv as HTMLElement).style.textDecoration = 'none';
+                              }
                             }}
                           >
-                            {!isEmpty && (
-                              <div
-                                onClick={() => {
-                                  setSelectedStages([stage]);
-                                  setSelectedProbs([prob]);
-                                  setLockedStage(stage);
-                                  setLockedProb(prob);
-                                  setChartView('deals');
-                                }}
-                                className="summary-cell"
-                                style={{
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  alignItems: 'flex-start',
-                                  justifyContent: 'center',
-                                  background: '#fff',
-                                  borderRadius: 12,
-                                  boxShadow: '0 2px 8px rgba(37,99,235,0.08)',
-                                  padding: '16px 20px',
-                                  minWidth: 130,
-                                  border: '1px solid #f0f0f0',
-                                  position: 'relative',
-                                  cursor: 'pointer',
-                                  transition: 'all 0.2s ease',
-                                }}
-                                onMouseEnter={e => {
-                                  e.currentTarget.style.border = '1.5px solid #2563eb';
-                                  const amountDiv = e.currentTarget.querySelector('.summary-amount');
-                                  if (amountDiv) {
-                                    (amountDiv as HTMLElement).style.color = '#2563eb';
-                                    (amountDiv as HTMLElement).style.textDecoration = 'underline';
-                                  }
-                                }}
-                                onMouseLeave={e => {
-                                  e.currentTarget.style.border = '1px solid #f0f0f0';
-                                  const amountDiv = e.currentTarget.querySelector('.summary-amount');
-                                  if (amountDiv) {
-                                    (amountDiv as HTMLElement).style.color = '#1f2937';
-                                    (amountDiv as HTMLElement).style.textDecoration = 'none';
-                                  }
-                                }}
-                              >
-                                <div className="summary-amount" style={{
-                                  fontSize: 16,
-                                  fontWeight: 600,
-                                  color: '#1f2937',
-                                  marginBottom: 8,
-                                  transition: 'color 0.2s, text-decoration 0.2s',
-                                }}>
-                                  ${cell.totalAmount.toLocaleString()}
-                                </div>
-                                <div style={{
-                                  fontSize: 13,
-                                  fontWeight: 400,
-                                  color: '#1f2937',
-                                  background: '#f3f4f6',
-                                  padding: '4px 12px',
-                                  borderRadius: 12,
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: 4,
-                                }}>
-                                  {cell.dealCount} Deals
-                                </div>
-                              </div>
-                            )}
+                            <div className="summary-amount" style={{
+                              fontWeight: 700,
+                              fontSize: 15,
+                              color: '#23272f',
+                              marginBottom: 0,
+                              transition: 'color 0.2s, text-decoration 0.2s',
+                            }}>
+                              ${cell.totalAmount.toLocaleString()}
+                            </div>
+                            <div style={{ fontSize: 13, color: '#64748b' }}>{cell.dealCount} Deals</div>
                           </div>
                         );
                       })
                     )}
                     {/* X-axis labels at the bottom */}
-                    <div style={{ gridColumn: '1 / span 2', gridRow: summaryProbabilities.length + 1, background: '#fff' }}></div>
+                    <div style={{ gridColumn: '1 / span 2', gridRow: summaryProbabilities.length + 1, background: '#f8fafc' }}></div>
                     {summaryStages.map((stage, colIdx) => (
                       <div key={stage} style={{
                         gridColumn: colIdx + 2,
                         gridRow: summaryProbabilities.length + 1,
-                        textAlign: 'center', fontWeight: 700, fontSize: 16, padding: '10px 0', background: '#f7f7f7', borderTop: '1px solid #eee',
+                        textAlign: 'center',
+                        fontWeight: 700,
+                        fontSize: 15,
+                        padding: '10px 0',
+                        color: '#64748b',
+                        background: '#f7f7f7',
+                        borderRadius: 8,
+                        borderTop: '1px solid #eee',
                       }}>{stage}</div>
                     ))}
                   </div>
-
                   {/* Column 3: Card Section */}
                   <div style={{ 
                     flex: '0 0 340px', 
@@ -1280,7 +1265,7 @@ function DealPipelineV2() {
       linecolor: '#888',
       linewidth: 2,
     },
-    dragmode: 'pan',
+    dragmode: 'zoom',
     autosize: true,
     height: 600,
     margin: { t: 40, l: 80, r: 40, b: 80 },
@@ -1312,7 +1297,7 @@ function DealPipelineV2() {
       <div style={{ borderBottom: '1px solid #e5e7eb', marginBottom: 16 }} />
 
       {/* V2 Filters (Fluent UI Dropdowns) */}
-      <div style={{ display: 'flex', gap: 16, marginBottom: 8 }}>
+      <div style={{ display: 'flex', gap: 16, marginBottom: 8, alignItems: 'center' }}>
         <Dropdown
           aria-label="Stage Filter V2"
           multiselect
@@ -1393,6 +1378,20 @@ function DealPipelineV2() {
             <Option key={opt} value={opt}>{opt}</Option>
           ))}
         </Dropdown>
+        <Button
+          size="small"
+          appearance="secondary"
+          style={{ marginLeft: 4 }}
+          onClick={() => {
+            setSelectedStagesV2(stagesV2);
+            setSelectedProbsV2(probabilitiesV2);
+            setSelectedOwnersV2(ownersV2);
+            setSelectedSmartV2(['AI Match', 'Recent Activity']);
+            setSelectedDealIdsV2(null);
+          }}
+        >
+          Reset to Default
+        </Button>
       </div>
 
       {/* Tag row for selected filters */}
@@ -1411,22 +1410,6 @@ function DealPipelineV2() {
           }}>
             {prob}
             <span style={{ marginLeft: 6, fontSize: 15, cursor: 'pointer', color: probTextColorsV2[prob] }} onClick={() => removeProbTag(prob)}>×</span>
-          </span>
-        ))}
-        {selectedOwnersV2.map(owner => (
-          <span key={owner} style={{
-            display: 'inline-flex', alignItems: 'center', background: '#e0e7ff', color: '#2563eb', borderRadius: 8, padding: '2px 10px', fontSize: 13, fontWeight: 500, border: '1px solid #e5e7eb', marginRight: 2, marginBottom: 2, cursor: 'pointer',
-          }}>
-            {owner}
-            <span style={{ marginLeft: 6, fontSize: 15, cursor: 'pointer', color: '#2563eb' }} onClick={() => removeOwnerTag(owner)}>×</span>
-          </span>
-        ))}
-        {selectedSmartV2.map(smart => (
-          <span key={smart} style={{
-            display: 'inline-flex', alignItems: 'center', background: '#f0fdf4', color: '#059669', borderRadius: 8, padding: '2px 10px', fontSize: 13, fontWeight: 500, border: '1px solid #e5e7eb', marginRight: 2, marginBottom: 2, cursor: 'pointer',
-          }}>
-            {smart}
-            <span style={{ marginLeft: 6, fontSize: 15, cursor: 'pointer', color: '#059669' }} onClick={() => removeSmartTag(smart)}>×</span>
           </span>
         ))}
       </div>
