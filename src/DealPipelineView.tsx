@@ -129,7 +129,7 @@ export default function DealPipelineView() {
         <ToggleButton checked={zoomed} onClick={() => setZoomed(z => !z)}>
           {zoomed ? 'Zoomed View' : 'Default View'}
         </ToggleButton>
-        <Dropdown value={stage} onChange={((_event, data) => setStage(data.optionValue as string)) as any}>
+        <Dropdown value={stage} onChange={(_event: React.SyntheticEvent, data: { optionValue: string }) => setStage(data.optionValue)}>
           {stages.map(s => (
             <Option key={s} value={s}>{s}</Option>
           ))}
@@ -159,8 +159,8 @@ export default function DealPipelineView() {
               </YAxis>
               <Tooltip
                 cursor={{ strokeDasharray: '3 3' }}
-                formatter={(_v: number, _n: string, props: { payload: { name: string; size: number; stage: string; nextActivityDate?: string } }) => {
-                  const d = props.payload;
+                formatter={(_v: number, _n: string, props: any) => {
+                  const d = props && props.payload ? props.payload : {};
                   return [
                     `Name: ${d.name}`,
                     `Size: $${d.size}`,
@@ -169,7 +169,7 @@ export default function DealPipelineView() {
                   ];
                 }}
               />
-              <Scatter data={withDate} shape={DealBadge} />
+              <Scatter data={withDate} shape={DealBadge as (props: any) => JSX.Element} />
               <Brush dataKey="y" height={30} stroke="#2563eb" />
             </ScatterChart>
           </ResponsiveContainer>
