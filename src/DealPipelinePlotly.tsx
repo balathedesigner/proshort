@@ -1140,7 +1140,7 @@ function DealPipelineV2() {
   const [selectedStagesV2, setSelectedStagesV2] = React.useState(stagesV2);
   const [selectedProbsV2, setSelectedProbsV2] = React.useState(probabilitiesV2);
   const [selectedOwnersV2, setSelectedOwnersV2] = React.useState(ownersV2);
-  const [selectedSmartV2, setSelectedSmartV2] = React.useState(['AI Match', 'Recent Activity']);
+  const [selectedSmartV2, setSelectedSmartV2] = React.useState(['Top Priority Deals', 'Deals in Forecasting']);
   const [selectedDealIdsV2, setSelectedDealIdsV2] = React.useState<number[] | null>(null);
 
   // Filtered deals for V2
@@ -1384,7 +1384,7 @@ function DealPipelineV2() {
             setSelectedStagesV2(stagesV2);
             setSelectedProbsV2(probabilitiesV2);
             setSelectedOwnersV2(ownersV2);
-            setSelectedSmartV2(['AI Match', 'Recent Activity']);
+            setSelectedSmartV2(['Top Priority Deals', 'Deals in Forecasting']);
             setSelectedDealIdsV2(null);
           }}
         >
@@ -1547,7 +1547,7 @@ const sampleDealsV2 = [
   { id: 5, name: 'Epsilon AG', size: 95000, stage: 'Closed Won', probability: 'Medium', owner: 'Bob', date: '2024-06-20' },
 ];
 
-const smartOptionsV2 = ['AI Match', 'Recent Activity', 'High Value', 'Needs Attention']; 
+const smartOptionsV2 = ['Top Priority Deals', 'Deals in Forecasting'];
 
 // Ensure each stage/probability/owner group in V2 has at least 15 deals
 (function ensureMinDealsPerCellV2() {
