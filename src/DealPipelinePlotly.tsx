@@ -1153,8 +1153,6 @@ function DealPipelineV2() {
   // Tag removal handlers
   const removeStageTag = (stage: string) => setSelectedStagesV2(selectedStagesV2.filter(s => s !== stage));
   const removeProbTag = (prob: string) => setSelectedProbsV2(selectedProbsV2.filter(p => p !== prob));
-  const removeOwnerTag = (owner: string) => setSelectedOwnersV2(selectedOwnersV2.filter(o => o !== owner));
-  const removeSmartTag = (smart: string) => setSelectedSmartV2(selectedSmartV2.filter(s => s !== smart));
 
   // Select All logic
   const handleStageSelect = (_e: React.SyntheticEvent, data: { selectedOptions: string[] }) => {
